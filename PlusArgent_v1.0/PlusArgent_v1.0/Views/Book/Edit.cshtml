@@ -1,0 +1,287 @@
+﻿@model PlusArgent_v1._0.Models.Book
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Book</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.IdBook)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IdAccount, "IdAccount", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.IdAccount, ViewBag.listAccounts as SelectList, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.IdAccount, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.RadioButtonFor(model => model.Type, "C", new { htmlAttributes = new { @class = "form-control" }, @id = "rad1" }) Credit
+            @Html.RadioButtonFor(model => model.Type, "D", new { htmlAttributes = new { @class = "form-control" }, @id = "rad2", @checked = "checked", }) Debit
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IdCategory, "IdCategory", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.IdCategory, ViewBag.listCategories as SelectList, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.IdCategory, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Value, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Value, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.Date, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            Repeat value @Html.CheckBox("isRepeat", false) ?
+            <div class="invisible" id="cbParcel">Installment payment @Html.CheckBox("isParcel", false) ?</div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RepeatPeriod, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.RepeatPeriod, new { @class = "form-control", disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.RepeatPeriod, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NParcels, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.TextBoxFor(model => model.NParcels, new { @class = "form-control", disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.NParcels, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+    </div>
+
+
+    @Html.HiddenFor(model => model.Repeat)
+    @Html.HiddenFor(model => model.TypeHidden)
+    @Html.HiddenFor(model => model.isPay)
+    @Html.HiddenFor(model => model.IdAccountHidden)
+    @Html.HiddenFor(model => model.RepeatPeriodHidden)
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+<script type="text/javascript">
+
+
+    //blocked fields for different Type account
+    function ReturnType(IdDDL) {
+
+        $.getJSON("../Account/GetTypeAccount", { id: IdDDL },
+
+            function (data) {
+                return data;
+            });
+
+    }
+
+
+
+
+    function DefaultConfiguration(data) {
+        
+        var isPay = $('#isPay').val();
+        
+        if (isPay > 0) {
+            
+            ConfigObj('#IdAccount', true, null, true, false);    //disabled
+            ConfigObj('#rad1', true, null, true, false);    //disabled
+            ConfigObj('#rad2', true, null, true, true);     //disabled
+            ConfigObj('#Repeat', false, 1, true, true);      //default value = 1 (Repeat)
+            ConfigObj('#isRepeat', true, null, true, true); //disabled
+            ConfigObj('#isParcel', true, null, true, true); //disabled
+            ConfigObj('#cbParcel', true, null, true, null); //visible
+            ConfigObj('#RepeatPeriod', true, null, true,null); //enabled
+            ConfigObj('#NParcels', true, null, null); //enabled
+
+        } else {
+            
+            var repeat = $('#Repeat').val();
+            var parcel = $('#NParcels').val();
+
+            
+            if (repeat == 1) {
+
+                ConfigObj('#isRepeat', false, null, true, true); //enabled
+                ConfigObj('#RepeatPeriod', false, null, true, null); //enabled
+                ConfigObj('#cbParcel', true, null, true, null); //visible
+
+                if (parcel > 0) {
+                    ConfigObj('#isParcel', false, null, true, true); //enabled
+                    ConfigObj('#NParcels', false,null,true, null); //enabled
+                } else {
+                    ConfigObj('#isParcel', false, null, true, false); //disabled
+                    ConfigObj('#NParcels', true,'',true, null); //disabled
+                }
+
+            } else {
+                ConfigObj('#isRepeat', false, null, true, false); //disabled
+                ConfigObj('#RepeatPeriod', true, null, true, null); //disabled
+            }
+            
+
+            if ((data == 2) || (data == 3)) {
+                    
+                //disable type field
+                ConfigObj('#rad1', true, null, true, false); //disabled
+                ConfigObj('#rad2', true, null, true, true); //disabled
+
+                //loan configuration
+                if (data == 3) {
+                    ConfigObj('#isRepeat', true, null, true, true); //disabled
+                    ConfigObj('#isParcel', true, null, true, true); //disabled
+                    ConfigObj('#cbParcel', true, null, true, null); //visible
+                }
+
+            } else {
+                //enable Type Field
+                ConfigObj('#rad1', false, null, true, false); //enabled
+                ConfigObj('#rad2', false, null, true, true);  //enabled
+            }
+        }
+
+        ConfigObj('#TypeHidden', false, 'D', false, null); // valuedefault = data
+    }
+
+
+
+    //OnChange DDL
+    $(document).ready(function () {
+        $("#IdAccount").change(function () {
+            var dID = $(this).val();
+            DefaultConfiguration(dID);
+        });
+    });
+
+    //OnChange CheckBox Repeat
+    $(function () {
+        $('#isRepeat').change(function () {
+            if ($(this).is(':checked')) {
+                ConfigObj('#Repeat', false, 1, false, null); //defaultvalue = 1
+                ConfigObj('#RepeatPeriod', false, null, true, null); //enabled
+                ConfigObj('#cbParcel', true, null, true, null); //visible
+
+                if ($('#NParcels').val() > 0) {
+                    ConfigObj('#isParcel', false, null, true, true); //uncheckd
+                    ConfigObj('#NParcels', false, null, true, null); //enabled
+                } else {
+                    ConfigObj('#isParcel', false, null, true, false); //uncheckd
+                    ConfigObj('#NParcels', true, null, true, null); //disabled 
+                }
+            } else {
+                if ($('#NParcels').val() > 0) {
+                    alert('Attention, by disabling this option, all parcels will be removed from the system.');
+                }
+                ConfigObj('#Repeat', false, 0, false, null); //defaultvalue = 0
+                ConfigObj('#cbParcel', true, null, false, null); //disabled
+                ConfigObj('#RepeatPeriod', true,null, true, null); //disabled, defaultvalue = 0
+                ConfigObj('#NParcels', true, null, true, null); //disabled, defaultavalue = empty
+            }
+        });
+    });
+
+    //OnChange CheckBox Installment Payment
+    $(function () {
+        $('#isParcel').change(function () {
+            if ($(this).is(':checked')) {
+                ConfigObj('#NParcels', false, null, true, null); //enabled
+            } else {
+
+                if ($('#NParcels').val() > 0) {
+                    alert('Attention, by disabling this option, all parcels will be removed from the system.');
+                }
+                
+                ConfigObj('#NParcels', true,'', true, null); //disabled, defaultvalue = empty
+            }
+        });
+    });
+
+    
+    //first execution or return error
+    DefaultConfiguration($('#IdAccount').val());
+
+    //generic funcion for blocked
+    function ConfigObj(obj, disabled, defaultvalue, visibled, checked) {
+        if (disabled == true) {
+            $(obj).attr('disabled', true);
+        } else {
+            $(obj).removeAttr('disabled');
+        }
+
+        if (defaultvalue != null) {
+            $(obj).val(defaultvalue);
+        }
+
+        if (visibled == false) {
+            $(obj).addClass("invisible");
+        } else {
+            $(obj).removeClass("invisible");
+        }
+
+        if (($(obj).attr('type') == 'radio') || ($(obj).attr('type') == 'checkbox')) {
+            $(obj).prop("checked", checked);
+        }
+
+
+    }
+
+
+</script>

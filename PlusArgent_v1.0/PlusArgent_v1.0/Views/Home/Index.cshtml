@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Plus d'argent</h1>
+    <p class="lead">Plus d'argent est un système qui vous aide à contrôler vos dépenses financières</p>
+    <p><a href="https://www.plusdargent.ca" class="btn btn-primary btn-lg">En Savoir Plus &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Commencer</h2>
+        <p>
+            N'attendez plus une minute pour organiser votre vie financière.
+        </p>
+        <p>@Html.ActionLink("S'enregistrer", "Create", "User",null,new { @class = "btn btn-default" })
+
+        
+        </p>
+    </div>
+    <div class="col-md-4">
+        <h2>Je suis déjà inscrit</h2>
+        <p>
+            Si vous êtes déjà inscrit, connectez-vous à votre compte.
+        </p>
+        <p>@Html.ActionLink("Se connecter", "Login", "User", null, new { @class = "btn btn-default" })</p>
+    </div>
+    <div class="col-md-4">
+       
+    </div>
+</div>

@@ -1,0 +1,134 @@
+﻿@using PlusArgent_v1._0.Utils
+@model IEnumerable<PlusArgent_v1._0.Models.Book>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Content/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<div class="row">
+    <div class="col-md-12">
+        <div class="x_panel">
+
+            <div class="x_title">
+                <h2>@TextLayouts.vtAccountCreate</h2>
+
+
+
+                <div class="title_right">
+                    <div class=" pull-right top_search">
+                        <div class="input-group">
+                            <a href="~/Book/Create" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> @TextLayouts.btnInsert</a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+                <div class="col-md-9 col-sm-12 col-xs-12">
+
+
+
+                    <table class="table">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Account.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Category.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Value)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Date)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.RepeatPeriod)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Type)
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Account.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Category.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Value)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+
+                                <td>
+                                    @*@Html.DisplayFor(modelItem => Enum.GetValues(typeof(RepeatPeriod)), "Select My Type", new { @class = "form-control" })*@
+
+                                    @Html.DisplayFor(modelItem => item.RepeatPeriod)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Type)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.IdBook }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.IdBook }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.IdBook })
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+
+
+
+
+                </div>
+
+                <div class="col-md-3 col-sm-12 col-xs-12">
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="modal"></div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+        $(function () {
+            $(".delete").click(function () {
+                var id = $(this).attr("data-id");
+                $("#modal").load('@Url.Action("Delete", "Account")/' + id, function () {
+                    $("#modal").modal();
+                })
+            });
+        })
+</script>
+
+

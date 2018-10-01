@@ -1,0 +1,82 @@
+﻿@{
+    PlusArgent_v1._0.Models.User user = (PlusArgent_v1._0.Models.User)HttpContext.Current.Session["User"];
+
+    var fullName = "";
+    var photo = "";
+
+    if (user != null)
+    {
+        fullName = user.FullName;
+        photo    = user.Photo;
+        if(photo == null)
+        {
+            photo = "DefaultPhoto.jpg";
+        }
+    }
+
+}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Meu Aplicativo ASP.NET</title>
+
+    <!-- adicionado porque não funcionava o jquery-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+
+
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">@Html.ActionLink("Plus Argent", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("Users", "Index", "User")</li>
+                <li>@Html.ActionLink("Accounts", "Index", "Account")</li>
+                <li>@Html.ActionLink("Categories", "Index", "Category")</li>
+                <li>@Html.ActionLink("Book", "Index", "Book")</li>
+                <li>@Html.ActionLink("Contato", "Contact", "Home")</li>
+                <li></li>
+            </ul>
+
+            @if (fullName == "")
+            {
+                <ul class="nav navbar-nav navbar-right">
+                    <li >@Html.ActionLink(" S'enregistrer", "Create", "User", null, new { @class = "glyphicon glyphicon-user" })</li>
+                    <li>@Html.ActionLink(" Connecter", "Login", "User", null, new { @class = "glyphicon glyphicon-log-in" })</li>
+                </ul>
+            }
+            else
+            {
+                <ul class="nav navbar-nav navbar-right">
+                    <li><img src="~/Uploads/@photo" alt="Image" width="75" class="img-circle rounded-circle" /></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span>&nbsp; @fullName</a></li>
+                    <li>@Html.ActionLink(" Desconnecter", "LogOut", "User", null, new { @class = "glyphicon glyphicon-log-out" })</li>
+                </ul>
+            }
+        </div>
+
+     
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Meu Aplicativo ASP.NET</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
